@@ -1,82 +1,113 @@
-# DASS-21 Assessment Tool 🧠
+# 🧠 Mental Health Assessment Platform
 
-A modern, responsive, and self-contained web-based tool for conducting the **DASS-21 (Depression, Anxiety and Stress Scale - 21 items)** assessment.
+A modern, responsive, and fully client-side mental health screening platform built using only HTML, CSS, and JavaScript. This platform allows users to complete scientifically validated psychological assessments and generate personalized PDF reports instantly — all in their browser.
 
 🌐 **Live Demo:** [https://dass21assessment.netlify.app](https://dass21assessment.netlify.app)
 
------
+## 🌟 Features
 
-## 📝 Overview
+* 🧪 **Multiple Validated Assessments**
 
-The **DASS-21 Assessment Tool** is an interactive questionnaire designed to measure the emotional states of **depression**, **anxiety**, and **stress** using 21 validated psychological prompts. It provides immediate scoring and severity levels using a clean and mobile-friendly UI.
+  * DASS-21 & DASS-42
+  * DASS-Y (Youth)
+  * PHQ-9
+  * GAD-7
+  * PSS-10
+  * SWLS
+  * RSES
 
------
+* 📊 **Real-time Scoring & Feedback**
 
-## 💡 Features
+  * Category-wise score breakdown
+  * Severity level color indicators
 
-  * 📋 21-question form grouped by Depression, Anxiety, and Stress indicators
-  * 📊 Real-time progress bar
-  * 🚀 Instant results with categorized severity levels
-  * 📄 **PDF Report Generation**: Download a detailed report of your assessment, including individual responses and interpretation guide.
-  * 🎨 Elegant responsive design
-  * 📅 Date & name capture for personal tracking
-  * ⚠️ Informational disclaimer for non-clinical use
+* 📄 **PDF Report Generation**
 
------
+  * Fully formatted and styled reports with response details
+  * Downloadable directly from the browser (no backend)
 
-## 🛠️ Technologies Used
+* 🧍 **Personalized Inputs**
 
-  * **HTML5**: Structure of the web application.
-  * **CSS3**: Styling and responsive design.
-  * **JavaScript**: Core logic for the assessment, scoring, and UI interactions.
-  * **jsPDF Library**: Used for client-side PDF generation of the assessment report.
+  * Name and date fields included in the report
 
------
+* 📱 **Responsive UI**
 
-## 🚀 Deployment
+  * Mobile-friendly and visually appealing design
+  * Smooth animations and gradients
 
-This is a pure static site — no backend required. Easily deployable via platforms like:
+* 🛡️ **Privacy First**
 
-  * [Netlify](https://netlify.com)
+  * All data is processed client-side. No data is sent or stored on servers.
 
-Already deployed on:
-🔗 **[https://dass21assessment.netlify.app](https://dass21assessment.netlify.app)**
+---
 
------
 
-## 📂 Folder Structure
+## 🚀 Getting Started
 
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/mental-health-assessment.git
+cd mental-health-assessment
 ```
-📁 /project-root
-└── index.html   # All-in-one HTML, CSS & JavaScript file
+
+### 2. Open in Browser
+
+No build step required.
+
+```bash
+open index.html
 ```
 
------
+Or simply double-click `index.html` in your file explorer.
 
-## 🧠 How It Works
+---
 
-  * User fills in their name and date
-  * Answers 21 multiple-choice questions (0–3 scale)
-  * App categorizes questions into:
-      * **Depression** (7 items)
-      * **Anxiety** (7 items)
-      * **Stress** (7 items)
-  * Scores are doubled and compared against clinical thresholds
-  * Severity levels are color-coded and shown instantly
-  * Users can generate and download a PDF report of their results.
+## 🧪 Assessments Included
 
------
+| Assessment | Questions | Time       | Focus Area                       |
+| ---------- | --------- | ---------- | -------------------------------- |
+| DASS-21    | 21        | 5–10 mins  | Depression, Anxiety, Stress      |
+| PHQ-9      | 9         | 2–5 mins   | Depression                       |
+| GAD-7      | 7         | 2–5 mins   | Anxiety                          |
+| PSS-10     | 10        | 3–5 mins   | Perceived Stress                 |
+| SWLS       | 5         | 1–3 mins   | Life Satisfaction                |
+| RSES       | 10        | 2–5 mins   | Self-Esteem                      |
+| DASS-42    | 42        | 10–15 mins | Full Depression, Anxiety, Stress |
+| DASS-Y     | 42        | 10–15 mins | Youth Mental Health              |
 
-## ⚠️ Disclaimer
+---
 
-> This tool is **not a diagnostic tool**. It is intended for educational or self-reflective purposes only. For mental health concerns, always consult a licensed professional.
+## 📄 Disclaimer
 
------
+This platform is intended **for educational and self-reflection purposes only**. It is **not a diagnostic tool** and should not replace consultation with licensed healthcare professionals.
+
+---
+
+## 📁 File Structure
+
+```plaintext
+mental-health-assessment/
+├── index.html         # Main application file (self-contained)
+```
+
+---
+
+## 🛠 Built With
+
+* HTML5
+* CSS3 (Flexbox & Grid)
+* Vanilla JavaScript
+* [jsPDF](https://github.com/parallax/jsPDF) for PDF generation
+* Google Fonts (`Inter`)
+
+---
 
 ## 🙌 Acknowledgments
 
-  * Based on the original **DASS-21** scale developed by Lovibond & Lovibond.
-  * Inspired by public mental health screening efforts.
-  * **jsPDF**: For enabling PDF report generation.
+* Assessments adapted from public domain tools (e.g., PHQ-9, GAD-7, DASS)
+* Layout and scoring inspired by clinical guidelines
 
------
+---
+
+
