@@ -646,7 +646,7 @@
       
       questions.forEach(q => {
         checkPageBreak(15);
-        
+      
         const selectedValue = document.querySelector(`input[name="q${q.id}"]:checked`).value;
         const scaleText = {
           '0': 'Did not apply to me at all',
@@ -654,16 +654,24 @@
           '2': 'Applied to me to a considerable degree or a good part of time',
           '3': 'Applied to me very much or most of the time'
         }[selectedValue];
-        
+      
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
-        doc.text(`${q.id}. ${q.text}`, 20, yPosition);
-        yPosition += 6;
-        
+      
+        // 👉 Wrap long question text
+        const questionText = `${q.id}. ${q.text}`;
+        const questionLines = doc.splitTextToSize(questionText, 170);
+        doc.text(questionLines, 20, yPosition);
+        yPosition += questionLines.length * 5;
+      
+        // 👉 Wrap long response text
         doc.setFont('helvetica', 'normal');
-        doc.text(`Response: ${selectedValue} - ${scaleText}`, 25, yPosition);
-        yPosition += 10;
+        const responseText = `Response: ${selectedValue} - ${scaleText}`;
+        const responseLines = doc.splitTextToSize(responseText, 165);
+        doc.text(responseLines, 25, yPosition);
+        yPosition += responseLines.length * 5 + 5;
       });
+
       
       // Add new page for interpretation
       doc.addPage();
