@@ -1,619 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASS-21 Assessment Tool</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DASS-21 Assessment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+    .container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: 100vh;
+      padding: 24px;
+      gap: 24px;
+    }
 
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
+    .sidebar {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
+    .sidebar h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
 
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
-        }
+    .sidebar p {
+      font-size: 0.95rem;
+      color: #64748b;
+      font-weight: 400;
+      line-height: 1.5;
+    }
 
-        .disclaimer {
-            background: #f8f9fa;
-            border-left: 4px solid #e74c3c;
-            padding: 20px;
-            margin: 30px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            color: #666;
-        }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-        .instructions {
-            padding: 30px;
-            background: #f8f9fa;
-            margin: 20px 30px;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-        }
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.9rem;
+    }
 
-        .instructions h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
+    .form-group input {
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
 
-        .rating-scale {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
 
-        .rating-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-            text-align: center;
-            font-size: 0.9rem;
-        }
+    .instructions {
+      font-size: 0.9rem;
+      background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      color: #3730a3;
+      line-height: 1.5;
+    }
 
-        .rating-number {
-            font-weight: bold;
-            color: #3498db;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
+    .main {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 20px;
+      padding: 32px;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        .form-section {
-            padding: 30px;
-        }
+    .question {
+      margin-bottom: 28px;
+      padding: 20px;
+      background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
 
-        .personal-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+    .question:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+    .question h3 {
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      color: #1f2937;
+      font-weight: 500;
+      line-height: 1.4;
+    }
 
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #2c3e50;
-        }
+    .options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-        .form-group input {
-            padding: 12px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
+    .option {
+      position: relative;
+    }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
+    .option label {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: block;
+      min-width: 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .question {
-            background: #f8f9fa;
-            margin: 20px 0;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
+    .option label::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      transition: left 0.5s;
+    }
 
-        .question:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
+    .option input {
+      display: none;
+    }
 
-        .question-number {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            font-weight: bold;
-            margin-right: 15px;
-            font-size: 0.9rem;
-        }
+    .option input:checked + label {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #667eea;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
 
-        .question-text {
-            display: inline-block;
-            font-size: 1.1rem;
-            color: #2c3e50;
-            font-weight: 500;
-            margin-bottom: 20px;
-            vertical-align: top;
-            width: calc(100% - 50px);
-        }
+    .option input:checked + label::before {
+      left: 100%;
+    }
 
-        .options {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    .option label:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
 
-        .option {
-            flex: 1;
-            text-align: center;
-        }
+    .submit {
+      margin-top: 32px;
+      text-align: center;
+    }
 
-        .option input[type="radio"] {
-            display: none;
-        }
+    .submit button {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
 
-        .option label {
-            display: block;
-            padding: 15px 10px;
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
+    .submit button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
 
-        .option label:hover {
-            background: #f8f9fa;
-            border-color: #3498db;
-        }
+    .submit button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
+    }
 
-        .option input[type="radio"]:checked + label {
-            background: #3498db;
-            color: white;
-            border-color: #3498db;
-            transform: scale(1.05);
-        }
+    .submit button:hover::before {
+      left: 100%;
+    }
 
-        .option-number {
-            display: block;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+    .results {
+      display: none;
+      margin-top: 40px;
+      padding: 32px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 20px;
+      border: 1px solid rgba(14, 165, 233, 0.2);
+    }
 
-        .option-text {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
+    .results h2 {
+      text-align: center;
+      margin-bottom: 32px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-        .submit-section {
-            padding: 30px;
-            text-align: center;
-            background: #f8f9fa;
-        }
+    .result-box {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
 
-        .submit-btn {
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
-        }
+    .score-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      padding: 28px;
+      border-radius: 20px;
+      text-align: center;
+      flex: 1;
+      min-width: 200px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-        }
+    .score-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    }
 
-        .submit-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+    .score-card h4 {
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #374151;
+    }
 
-        .results {
-            display: none;
-            padding: 30px;
-            background: #f8f9fa;
-            margin: 20px 30px;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-        }
+    .score-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-        .results.show {
-            display: block;
-        }
+    .score-level {
+      margin-top: 12px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-        .results h3 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            text-align: center;
-        }
+    .normal { 
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); 
+      color: #065f46; 
+      border: 1px solid #a7f3d0;
+    }
+    
+    .mild { 
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+      color: #92400e; 
+      border: 1px solid #fde68a;
+    }
+    
+    .moderate { 
+      background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); 
+      color: #c2410c; 
+      border: 1px solid #fdba74;
+    }
+    
+    .severe { 
+      background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%); 
+      color: #991b1b; 
+      border: 1px solid #fca5a5;
+    }
+    
+    .extremely-severe { 
+      background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); 
+      color: #6b21a8; 
+      border: 1px solid #e9d5ff;
+    }
 
-        .score-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        padding: 16px;
+      }
 
-        .score-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            border: 1px solid #e9ecef;
-        }
+      .sidebar {
+        padding: 20px;
+      }
 
-        .score-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
+      .main {
+        padding: 24px;
+      }
 
-        .score-value {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
+      .options {
+        justify-content: center;
+      }
 
-        .score-level {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
+      .result-box {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
 
-        .normal { background: #d4edda; color: #155724; }
-        .mild { background: #fff3cd; color: #856404; }
-        .moderate { background: #ffeaa7; color: #d68910; }
-        .severe { background: #f8d7da; color: #721c24; }
-        .extremely-severe { background: #f5c6cb; color: #491217; }
+    /* Scrollbar styling */
+    .main::-webkit-scrollbar {
+      width: 8px;
+    }
 
-        .depression .score-value { color: #3498db; }
-        .anxiety .score-value { color: #e67e22; }
-        .stress .score-value { color: #e74c3c; }
+    .main::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
 
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 3px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
+    .main::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+    }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .progress-text {
-            text-align: center;
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-
-            .header {
-                padding: 30px 20px;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .personal-info {
-                grid-template-columns: 1fr;
-            }
-
-            .options {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .option label {
-                padding: 20px;
-            }
-
-            .score-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    .main::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>DASS-21 Assessment</h1>
-            <p>Depression, Anxiety and Stress Scale - 21 Items</p>
-        </div>
+  <div class="container">
+    <div class="sidebar">
+      <h1>DASS-21</h1>
+      <p>Depression, Anxiety, and Stress Self-Assessment Tool</p>
 
-        <div class="disclaimer">
-            <strong>Important:</strong> The DASS-21 should not be used to replace a face-to-face clinical interview. If you are experiencing significant emotional difficulties, you should contact your GP for a referral to a qualified professional.
-        </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter your name" />
+      </div>
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" />
+      </div>
 
-        <div class="instructions">
-            <h3>Instructions</h3>
-            <p>Please read each statement and select a number 0, 1, 2, or 3 which indicates how much the statement applied to you over the past week. There are no right or wrong answers. Do not spend too much time on any statement.</p>
-            
-            <div class="rating-scale">
-                <div class="rating-item">
-                    <div class="rating-number">0</div>
-                    <div>Did not apply to me at all</div>
-                </div>
-                <div class="rating-item">
-                    <div class="rating-number">1</div>
-                    <div>Applied to me to some degree, or some of the time</div>
-                </div>
-                <div class="rating-item">
-                    <div class="rating-number">2</div>
-                    <div>Applied to me to a considerable degree or a good part of time</div>
-                </div>
-                <div class="rating-item">
-                    <div class="rating-number">3</div>
-                    <div>Applied to me very much or most of the time</div>
-                </div>
-            </div>
-        </div>
-
-        <form id="dassForm">
-            <div class="form-section">
-                <div class="personal-info">
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Date:</label>
-                        <input type="date" id="date" name="date" required>
-                    </div>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-text" id="progressText">0 of 21 questions completed</div>
-
-                <div id="questions"></div>
-            </div>
-
-            <div class="submit-section">
-                <button type="submit" class="submit-btn" id="submitBtn" disabled>Complete Assessment</button>
-            </div>
-        </form>
-
-        <div class="results" id="results">
-            <h3>Your DASS-21 Results</h3>
-            <div class="score-grid">
-                <div class="score-card depression">
-                    <div class="score-title">Depression</div>
-                    <div class="score-value" id="depressionScore">0</div>
-                    <div class="score-level" id="depressionLevel">Normal</div>
-                </div>
-                <div class="score-card anxiety">
-                    <div class="score-title">Anxiety</div>
-                    <div class="score-value" id="anxietyScore">0</div>
-                    <div class="score-level" id="anxietyLevel">Normal</div>
-                </div>
-                <div class="score-card stress">
-                    <div class="score-title">Stress</div>
-                    <div class="score-value" id="stressScore">0</div>
-                    <div class="score-level" id="stressLevel">Normal</div>
-                </div>
-            </div>
-        </div>
+      <div class="instructions">
+        <strong>Instructions:</strong> Please rate how much each statement applied to you during the past week using the 0–3 scale below.
+      </div>
     </div>
 
-    <script>
-        const questions = [
-            { id: 1, type: 's', text: 'I found it hard to wind down' },
-            { id: 2, type: 'a', text: 'I was aware of dryness of my mouth' },
-            { id: 3, type: 'd', text: 'I couldn\'t seem to experience any positive feeling at all' },
-            { id: 4, type: 'a', text: 'I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion)' },
-            { id: 5, type: 'd', text: 'I found it difficult to work up the initiative to do things' },
-            { id: 6, type: 's', text: 'I tended to over-react to situations' },
-            { id: 7, type: 'a', text: 'I experienced trembling (e.g. in the hands)' },
-            { id: 8, type: 's', text: 'I felt that I was using a lot of nervous energy' },
-            { id: 9, type: 'a', text: 'I was worried about situations in which I might panic and make a fool of myself' },
-            { id: 10, type: 'd', text: 'I felt that I had nothing to look forward to' },
-            { id: 11, type: 's', text: 'I found myself getting agitated' },
-            { id: 12, type: 's', text: 'I found it difficult to relax' },
-            { id: 13, type: 'd', text: 'I felt down-hearted and blue' },
-            { id: 14, type: 's', text: 'I was intolerant of anything that kept me from getting on with what I was doing' },
-            { id: 15, type: 'a', text: 'I felt I was close to panic' },
-            { id: 16, type: 'd', text: 'I was unable to become enthusiastic about anything' },
-            { id: 17, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
-            { id: 18, type: 's', text: 'I felt that I was rather touchy' },
-            { id: 19, type: 'a', text: 'I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)' },
-            { id: 20, type: 'a', text: 'I felt scared without any good reason' },
-            { id: 21, type: 'd', text: 'I felt that life was meaningless' }
-        ];
+    <div class="main">
+      <form id="dassForm">
+        <div id="questionContainer"></div>
 
-        const scaleLabels = [
-            'Did not apply to me at all',
-            'Applied to me to some degree, or some of the time',
-            'Applied to me to a considerable degree or a good part of time',
-            'Applied to me very much or most of the time'
-        ];
+        <div class="submit">
+          <button type="submit">Calculate Results</button>
+        </div>
+      </form>
 
-        let answers = {};
-        let completedQuestions = 0;
+      <div class="results" id="results">
+        <h2>Your Assessment Results</h2>
+        <div class="result-box">
+          <div class="score-card">
+            <h4>Depression</h4>
+            <div class="score-value" id="depressionScore">0</div>
+            <div class="score-level" id="depressionLevel">Normal</div>
+          </div>
+          <div class="score-card">
+            <h4>Anxiety</h4>
+            <div class="score-value" id="anxietyScore">0</div>
+            <div class="score-level" id="anxietyLevel">Normal</div>
+          </div>
+          <div class="score-card">
+            <h4>Stress</h4>
+            <div class="score-value" id="stressScore">0</div>
+            <div class="score-level" id="stressLevel">Normal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        function renderQuestions() {
-            const questionsContainer = document.getElementById('questions');
-            questionsContainer.innerHTML = '';
+  <script>
+    const questions = [
+      { id: 1, type: 's', text: 'I found it hard to wind down' },
+      { id: 2, type: 'a', text: 'I was aware of dryness of my mouth' },
+      { id: 3, type: 'd', text: 'I couldn\'t seem to experience any positive feeling at all' },
+      { id: 4, type: 'a', text: 'I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion)' },
+      { id: 5, type: 'd', text: 'I found it difficult to work up the initiative to do things' },
+      { id: 6, type: 's', text: 'I tended to over-react to situations' },
+      { id: 7, type: 'a', text: 'I experienced trembling (e.g. in the hands)' },
+      { id: 8, type: 's', text: 'I felt that I was using a lot of nervous energy' },
+      { id: 9, type: 'a', text: 'I was worried about situations in which I might panic and make a fool of myself' },
+      { id: 10, type: 'd', text: 'I felt that I had nothing to look forward to' },
+      { id: 11, type: 's', text: 'I found myself getting agitated' },
+      { id: 12, type: 's', text: 'I found it difficult to relax' },
+      { id: 13, type: 'd', text: 'I felt down-hearted and blue' },
+      { id: 14, type: 's', text: 'I was intolerant of anything that kept me from getting on with what I was doing' },
+      { id: 15, type: 'a', text: 'I felt I was close to panic' },
+      { id: 16, type: 'd', text: 'I was unable to become enthusiastic about anything' },
+      { id: 17, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
+      { id: 18, type: 's', text: 'I felt that I was rather touchy' },
+      { id: 19, type: 'a', text: 'I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)' },
+      { id: 20, type: 'a', text: 'I felt scared without any good reason' },
+      { id: 21, type: 'd', text: 'I felt that life was meaningless' }
+    ];
 
-            questions.forEach(question => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question';
-                questionDiv.innerHTML = `
-                    <span class="question-number">${question.id}</span>
-                    <span class="question-text">${question.text}</span>
-                    <div class="options">
-                        ${[0, 1, 2, 3].map(value => `
-                            <div class="option">
-                                <input type="radio" id="q${question.id}_${value}" name="q${question.id}" value="${value}">
-                                <label for="q${question.id}_${value}">
-                                    <span class="option-number">${value}</span>
-                                    <span class="option-text">${scaleLabels[value]}</span>
-                                </label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                questionsContainer.appendChild(questionDiv);
-            });
+    const scale = [
+      { value: '0', label: '0 - Did not apply' },
+      { value: '1', label: '1 - Some degree' },
+      { value: '2', label: '2 - Considerable degree' },
+      { value: '3', label: '3 - Very much/most time' }
+    ];
 
-            // Add event listeners to radio buttons
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', handleAnswerChange);
-            });
-        }
+    const container = document.getElementById('questionContainer');
+    questions.forEach(q => {
+      const div = document.createElement('div');
+      div.className = 'question';
+      div.innerHTML = `
+        <h3>${q.id}. ${q.text}</h3>
+        <div class="options">
+          ${scale.map(s => `
+            <div class="option">
+              <input type="radio" id="q${q.id}_${s.value}" name="q${q.id}" value="${s.value}" required />
+              <label for="q${q.id}_${s.value}">${s.value}</label>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      container.appendChild(div);
+    });
 
-        function handleAnswerChange(event) {
-            const questionId = parseInt(event.target.name.replace('q', ''));
-            const value = parseInt(event.target.value);
-            
-            if (!(questionId in answers)) {
-                completedQuestions++;
-            }
-            
-            answers[questionId] = value;
-            updateProgress();
-            
-            if (completedQuestions === 21) {
-                document.getElementById('submitBtn').disabled = false;
-            }
-        }
+    const form = document.getElementById('dassForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      let depression = 0, anxiety = 0, stress = 0;
+      
+      questions.forEach(q => {
+        const val = parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
+        if (q.type === 'd') depression += val;
+        else if (q.type === 'a') anxiety += val;
+        else if (q.type === 's') stress += val;
+      });
 
-        function updateProgress() {
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            const percentage = (completedQuestions / 21) * 100;
-            
-            progressFill.style.width = percentage + '%';
-            progressText.textContent = `${completedQuestions} of 21 questions completed`;
-        }
+      // Multiply by 2 as per DASS-21 scoring
+      depression *= 2;
+      anxiety *= 2;
+      stress *= 2;
 
-        function calculateScores() {
-            const depressionQuestions = [3, 5, 10, 13, 16, 17, 21];
-            const anxietyQuestions = [2, 4, 7, 9, 15, 19, 20];
-            const stressQuestions = [1, 6, 8, 11, 12, 14, 18];
+      document.getElementById('depressionScore').textContent = depression;
+      document.getElementById('anxietyScore').textContent = anxiety;
+      document.getElementById('stressScore').textContent = stress;
 
-            const depressionScore = depressionQuestions.reduce((sum, q) => sum + (answers[q] || 0), 0) * 2;
-            const anxietyScore = anxietyQuestions.reduce((sum, q) => sum + (answers[q] || 0), 0) * 2;
-            const stressScore = stressQuestions.reduce((sum, q) => sum + (answers[q] || 0), 0) * 2;
+      const getLevelAndClass = (score, type) => {
+        const ranges = {
+          d: [9, 13, 20, 27],
+          a: [7, 9, 14, 19],
+          s: [14, 18, 25, 33]
+        }[type];
 
-            return { depressionScore, anxietyScore, stressScore };
-        }
+        if (score <= ranges[0]) return ['Normal', 'normal'];
+        if (score <= ranges[1]) return ['Mild', 'mild'];
+        if (score <= ranges[2]) return ['Moderate', 'moderate'];
+        if (score <= ranges[3]) return ['Severe', 'severe'];
+        return ['Extremely Severe', 'extremely-severe'];
+      };
 
-        function getSeverityLevel(score, type) {
-            const ranges = {
-                depression: { normal: 9, mild: 13, moderate: 20, severe: 27 },
-                anxiety: { normal: 7, mild: 9, moderate: 14, severe: 19 },
-                stress: { normal: 14, mild: 18, moderate: 25, severe: 33 }
-            };
+      const [dl, dc] = getLevelAndClass(depression, 'd');
+      const [al, ac] = getLevelAndClass(anxiety, 'a');
+      const [sl, sc] = getLevelAndClass(stress, 's');
 
-            const range = ranges[type];
-            
-            if (score <= range.normal) return { level: 'Normal', class: 'normal' };
-            if (score <= range.mild) return { level: 'Mild', class: 'mild' };
-            if (score <= range.moderate) return { level: 'Moderate', class: 'moderate' };
-            if (score <= range.severe) return { level: 'Severe', class: 'severe' };
-            return { level: 'Extremely Severe', class: 'extremely-severe' };
-        }
+      const setLevel = (id, text, className) => {
+        const element = document.getElementById(id);
+        element.textContent = text;
+        element.className = `score-level ${className}`;
+      };
 
-        function displayResults(scores) {
-            const depressionLevel = getSeverityLevel(scores.depressionScore, 'depression');
-            const anxietyLevel = getSeverityLevel(scores.anxietyScore, 'anxiety');
-            const stressLevel = getSeverityLevel(scores.stressScore, 'stress');
+      setLevel('depressionLevel', dl, dc);
+      setLevel('anxietyLevel', al, ac);
+      setLevel('stressLevel', sl, sc);
 
-            document.getElementById('depressionScore').textContent = scores.depressionScore;
-            document.getElementById('anxietyScore').textContent = scores.anxietyScore;
-            document.getElementById('stressScore').textContent = scores.stressScore;
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    });
 
-            const depressionLevelEl = document.getElementById('depressionLevel');
-            const anxietyLevelEl = document.getElementById('anxietyLevel');
-            const stressLevelEl = document.getElementById('stressLevel');
-
-            depressionLevelEl.textContent = depressionLevel.level;
-            depressionLevelEl.className = `score-level ${depressionLevel.class}`;
-
-            anxietyLevelEl.textContent = anxietyLevel.level;
-            anxietyLevelEl.className = `score-level ${anxietyLevel.class}`;
-
-            stressLevelEl.textContent = stressLevel.level;
-            stressLevelEl.className = `score-level ${stressLevel.class}`;
-
-            document.getElementById('results').classList.add('show');
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        document.getElementById('dassForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const scores = calculateScores();
-            displayResults(scores);
-        });
-
-        // Set today's date as default
-        document.getElementById('date').valueAsDate = new Date();
-
-        // Initialize
-        renderQuestions();
-    </script>
+    // Set today's date
+    document.getElementById('date').valueAsDate = new Date();
+  </script>
 </body>
 </html>
