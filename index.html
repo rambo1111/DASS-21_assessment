@@ -539,8 +539,10 @@
       const doc = new jsPDF();
       
       const name = document.getElementById('name').value || 'Anonymous';
-      const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
-      
+      const rawDate = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+      const [yyyy, mm, dd] = rawDate.split('-');
+      const date = `${dd}/${mm}/${yyyy}`;
+
       const depression = parseInt(document.getElementById('depressionScore').textContent);
       const anxiety = parseInt(document.getElementById('anxietyScore').textContent);
       const stress = parseInt(document.getElementById('stressScore').textContent);
