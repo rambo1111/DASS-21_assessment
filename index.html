@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DASS-21 Assessment</title>
+  <title>Mental Health Assessment Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -20,8 +20,138 @@
       min-height: 100vh;
     }
 
-    .container {
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .test-selection {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .test-grid {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .test-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .test-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.6s;
+    }
+
+    .test-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .test-card:hover::before {
+      left: 100%;
+    }
+
+    .test-card h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .test-card .test-subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .test-card p {
+      color: #4b5563;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+
+    .test-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 12px;
+      border: 1px solid rgba(14, 165, 233, 0.2);
+    }
+
+    .test-meta span {
+      font-size: 0.85rem;
+      color: #0369a1;
+      font-weight: 500;
+    }
+
+    .test-button {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+    }
+
+    .test-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .container {
+      display: none;
       grid-template-columns: 320px 1fr;
       height: 100vh;
       padding: 24px;
@@ -54,6 +184,24 @@
       color: #64748b;
       font-weight: 400;
       line-height: 1.5;
+    }
+
+    .back-button {
+      background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+    }
+
+    .back-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
     }
 
     .form-group {
@@ -128,6 +276,7 @@
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .option {
@@ -150,17 +299,6 @@
       overflow: hidden;
     }
 
-    .option label::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-      transition: left 0.5s;
-    }
-
     .option input {
       display: none;
     }
@@ -171,10 +309,6 @@
       border-color: #667eea;
       transform: scale(1.05);
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-
-    .option input:checked + label::before {
-      left: 100%;
     }
 
     .option label:hover {
@@ -198,28 +332,11 @@
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .submit button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.5s;
     }
 
     .submit button:hover {
       transform: translateY(-3px);
       box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
-    }
-
-    .submit button:hover::before {
-      left: 100%;
     }
 
     .results {
@@ -324,31 +441,73 @@
       border: 1px solid #e9d5ff;
     }
 
-@media (max-width: 768px) {
-  .container {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    padding: 16px;
-  }
+    .low { 
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); 
+      color: #065f46; 
+      border: 1px solid #a7f3d0;
+    }
+    
+    .high { 
+      background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%); 
+      color: #991b1b; 
+      border: 1px solid #fca5a5;
+    }
 
-  .sidebar {
-    width: 100%;
-    padding: 20px;
-    position: static;
-    box-shadow: none;
-  }
+    .disclaimer {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 1px solid #fbbf24;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 40px auto;
+      max-width: 800px;
+      text-align: center;
+    }
 
-  .main {
-    width: 100%;
-    padding: 24px;
-    overflow-y: visible;
-  }
-}
+    .disclaimer h3 {
+      color: #92400e;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
 
+    .disclaimer p {
+      color: #92400e;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
 
-      .options {
-        justify-content: center;
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .header p {
+        font-size: 1rem;
+      }
+
+      .test-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        padding: 16px;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 20px;
+        position: static;
+        box-shadow: none;
+      }
+
+      .main {
+        width: 100%;
+        padding: 24px;
+        overflow-y: visible;
       }
 
       .result-box {
@@ -357,7 +516,6 @@
       }
     }
 
-    /* Scrollbar styling */
     .main::-webkit-scrollbar {
       width: 8px;
     }
@@ -378,10 +536,133 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Test Selection Screen -->
+  <div id="testSelection">
+    <div class="header">
+      <h1>Mental Health Assessment Platform</h1>
+      <p>Choose from our comprehensive collection of validated psychological assessment tools to better understand your mental health and wellbeing.</p>
+    </div>
+
+    <div class="test-selection">
+      <div class="test-grid">
+        <!-- DASS-21 -->
+        <div class="test-card" onclick="startTest('dass21')">
+          <h3>DASS-21</h3>
+          <div class="test-subtitle">Depression, Anxiety and Stress Scale</div>
+          <p>A comprehensive assessment tool that measures three related negative emotional states: depression, anxiety, and stress. Widely used in clinical and research settings.</p>
+          <div class="test-meta">
+            <span>📊 21 Questions</span>
+            <span>⏱️ 5-10 minutes</span>
+            <span>🎯 3 Scales</span>
+          </div>
+          <button class="test-button">Start DASS-21 Assessment</button>
+        </div>
+
+        <!-- PHQ-9 -->
+        <div class="test-card" onclick="startTest('phq9')">
+          <h3>PHQ-9</h3>
+          <div class="test-subtitle">Patient Health Questionnaire</div>
+          <p>A reliable and valid measure of depression severity. Used by healthcare professionals worldwide to screen for and monitor depression symptoms.</p>
+          <div class="test-meta">
+            <span>📊 9 Questions</span>
+            <span>⏱️ 2-5 minutes</span>
+            <span>🎯 Depression</span>
+          </div>
+          <button class="test-button">Start PHQ-9 Assessment</button>
+        </div>
+
+        <!-- GAD-7 -->
+        <div class="test-card" onclick="startTest('gad7')">
+          <h3>GAD-7</h3>
+          <div class="test-subtitle">Generalized Anxiety Disorder Scale</div>
+          <p>A brief, reliable tool for screening and measuring the severity of generalized anxiety disorder symptoms in clinical practice and research.</p>
+          <div class="test-meta">
+            <span>📊 7 Questions</span>
+            <span>⏱️ 2-5 minutes</span>
+            <span>🎯 Anxiety</span>
+          </div>
+          <button class="test-button">Start GAD-7 Assessment</button>
+        </div>
+
+        <!-- PSS-10 -->
+        <div class="test-card" onclick="startTest('pss10')">
+          <h3>PSS-10</h3>
+          <div class="test-subtitle">Perceived Stress Scale</div>
+          <p>Measures the degree to which situations in your life are appraised as stressful. Assesses how unpredictable, uncontrollable, and overloaded you find your life.</p>
+          <div class="test-meta">
+            <span>📊 10 Questions</span>
+            <span>⏱️ 3-5 minutes</span>
+            <span>🎯 Stress</span>
+          </div>
+          <button class="test-button">Start PSS-10 Assessment</button>
+        </div>
+
+        <!-- SWLS -->
+        <div class="test-card" onclick="startTest('swls')">
+          <h3>SWLS</h3>
+          <div class="test-subtitle">Satisfaction with Life Scale</div>
+          <p>A short 5-item instrument designed to measure global cognitive judgments of satisfaction with one's life as a whole.</p>
+          <div class="test-meta">
+            <span>📊 5 Questions</span>
+            <span>⏱️ 1-3 minutes</span>
+            <span>🎯 Life Satisfaction</span>
+          </div>
+          <button class="test-button">Start SWLS Assessment</button>
+        </div>
+
+        <!-- RSES -->
+        <div class="test-card" onclick="startTest('rses')">
+          <h3>RSES</h3>
+          <div class="test-subtitle">Rosenberg Self-Esteem Scale</div>
+          <p>A widely used self-report instrument for evaluating individual self-esteem. Measures both positive and negative feelings about the self.</p>
+          <div class="test-meta">
+            <span>📊 10 Questions</span>
+            <span>⏱️ 2-5 minutes</span>
+            <span>🎯 Self-Esteem</span>
+          </div>
+          <button class="test-button">Start RSES Assessment</button>
+        </div>
+
+        <!-- DASS-42 -->
+        <div class="test-card" onclick="startTest('dass42')">
+          <h3>DASS-42</h3>
+          <div class="test-subtitle">Full Depression, Anxiety and Stress Scale</div>
+          <p>The complete version of the DASS providing more comprehensive assessment of depression, anxiety, and stress with enhanced reliability and detailed subscale analysis.</p>
+          <div class="test-meta">
+            <span>📊 42 Questions</span>
+            <span>⏱️ 10-15 minutes</span>
+            <span>🎯 3 Detailed Scales</span>
+          </div>
+          <button class="test-button">Start DASS-42 Assessment</button>
+        </div>
+
+        <!-- DASS-Y -->
+        <div class="test-card" onclick="startTest('dassy')">
+          <h3>DASS-Y</h3>
+          <div class="test-subtitle">Youth Depression, Anxiety and Stress Scale</div>
+          <p>Specifically designed for adolescents and young adults (ages 12-17), this version uses age-appropriate language and scenarios for accurate youth assessment.</p>
+          <div class="test-meta">
+            <span>📊 42 Questions</span>
+            <span>⏱️ 10-15 minutes</span>
+            <span>🎯 Youth-Focused</span>
+          </div>
+          <button class="test-button">Start DASS-Y Assessment</button>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <h3>⚠️ Important Disclaimer</h3>
+        <p>These assessment tools are for educational and self-reflection purposes only. They are not diagnostic instruments and should not replace professional mental health evaluation. If you are experiencing significant emotional difficulties or mental health concerns, please consult with a qualified healthcare professional or mental health provider.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Container -->
+  <div class="container" id="testContainer">
     <div class="sidebar">
-      <h1>DASS-21</h1>
-      <p>Depression, Anxiety, and Stress Self-Assessment Tool</p>
+      <button class="back-button" onclick="backToSelection()">← Back to Test Selection</button>
+      <h1 id="testTitle">Assessment</h1>
+      <p id="testDescription">Assessment description</p>
 
       <div class="form-group">
         <label for="name">Name</label>
@@ -392,27 +673,13 @@
         <input type="date" id="date" />
       </div>
 
-      <div class="instructions">
-  <strong>Instructions:</strong><br />
-  Please rate how much each statement applied to you during the <strong>past week</strong>, including today, using the scale below:
-  <br /><br />
-  <ul style="margin-left: 20px; line-height: 1.6;">
-    <li><strong>0</strong> = Did not apply to me at all</li>
-    <li><strong>1</strong> = Applied to me to some degree, or some of the time</li>
-    <li><strong>2</strong> = Applied to me to a considerable degree or a good part of the time</li>
-    <li><strong>3</strong> = Applied to me very much or most of the time</li>
-  </ul>
-  <br />
-  Please answer all questions honestly and based on your experience over the last 7 days.
-</div>
-<p style="font-size: 0.85rem; color: #4b5563; margin-top: 8px;">
-  This tool is not a diagnosis. It is meant to help you reflect on your emotional well-being. For clinical concerns, consult a mental health professional.
-</p>
-
+      <div class="instructions" id="testInstructions">
+        Instructions will appear here
+      </div>
     </div>
 
     <div class="main">
-      <form id="dassForm">
+      <form id="assessmentForm">
         <div id="questionContainer"></div>
 
         <div class="submit">
@@ -422,23 +689,7 @@
 
       <div class="results" id="results">
         <h2>Your Assessment Results</h2>
-        <div class="result-box">
-          <div class="score-card">
-            <h4>Depression</h4>
-            <div class="score-value" id="depressionScore">0</div>
-            <div class="score-level" id="depressionLevel">Normal</div>
-          </div>
-          <div class="score-card">
-            <h4>Anxiety</h4>
-            <div class="score-value" id="anxietyScore">0</div>
-            <div class="score-level" id="anxietyLevel">Normal</div>
-          </div>
-          <div class="score-card">
-            <h4>Stress</h4>
-            <div class="score-value" id="stressScore">0</div>
-            <div class="score-level" id="stressLevel">Normal</div>
-          </div>
-        </div>
+        <div class="result-box" id="resultBox"></div>
         <div style="text-align: center; margin-top: 24px;">
           <button id="downloadPDF" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 32px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);">
             📄 Download PDF Report
@@ -449,76 +700,436 @@
   </div>
 
   <script>
-    const questions = [
-      { id: 1, type: 's', text: 'I found it hard to wind down' },
-      { id: 2, type: 'a', text: 'I was aware of dryness of my mouth' },
-      { id: 3, type: 'd', text: 'I couldn\'t seem to experience any positive feeling at all' },
-      { id: 4, type: 'a', text: 'I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion)' },
-      { id: 5, type: 'd', text: 'I found it difficult to work up the initiative to do things' },
-      { id: 6, type: 's', text: 'I tended to over-react to situations' },
-      { id: 7, type: 'a', text: 'I experienced trembling (e.g. in the hands)' },
-      { id: 8, type: 's', text: 'I felt that I was using a lot of nervous energy' },
-      { id: 9, type: 'a', text: 'I was worried about situations in which I might panic and make a fool of myself' },
-      { id: 10, type: 'd', text: 'I felt that I had nothing to look forward to' },
-      { id: 11, type: 's', text: 'I found myself getting agitated' },
-      { id: 12, type: 's', text: 'I found it difficult to relax' },
-      { id: 13, type: 'd', text: 'I felt down-hearted and blue' },
-      { id: 14, type: 's', text: 'I was intolerant of anything that kept me from getting on with what I was doing' },
-      { id: 15, type: 'a', text: 'I felt I was close to panic' },
-      { id: 16, type: 'd', text: 'I was unable to become enthusiastic about anything' },
-      { id: 17, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
-      { id: 18, type: 's', text: 'I felt that I was rather touchy' },
-      { id: 19, type: 'a', text: 'I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)' },
-      { id: 20, type: 'a', text: 'I felt scared without any good reason' },
-      { id: 21, type: 'd', text: 'I felt that life was meaningless' }
-    ];
+    let currentTest = null;
+    let testData = {};
 
-    const scale = [
-      { value: '0', label: '0 - Did not apply' },
-      { value: '1', label: '1 - Some degree' },
-      { value: '2', label: '2 - Considerable degree' },
-      { value: '3', label: '3 - Very much/most time' }
-    ];
+    // Test configurations
+    const tests = {
+      dass21: {
+        title: 'DASS-21',
+        description: 'Depression, Anxiety, and Stress Self-Assessment Tool',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          Please rate how much each statement applied to you during the <strong>past week</strong>, including today, using the scale below:
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>0</strong> = Did not apply to me at all</li>
+            <li><strong>1</strong> = Applied to me to some degree, or some of the time</li>
+            <li><strong>2</strong> = Applied to me to a considerable degree or a good part of the time</li>
+            <li><strong>3</strong> = Applied to me very much or most of the time</li>
+          </ul>
+          <br />
+          Please answer all questions honestly and based on your experience over the last 7 days.
+        `,
+        scale: [
+          { value: '0', label: '0' },
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' }
+        ],
+        questions: [
+          { id: 1, type: 's', text: 'I found it hard to wind down' },
+          { id: 2, type: 'a', text: 'I was aware of dryness of my mouth' },
+          { id: 3, type: 'd', text: 'I couldn\'t seem to experience any positive feeling at all' },
+          { id: 4, type: 'a', text: 'I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion)' },
+          { id: 5, type: 'd', text: 'I found it difficult to work up the initiative to do things' },
+          { id: 6, type: 's', text: 'I tended to over-react to situations' },
+          { id: 7, type: 'a', text: 'I experienced trembling (e.g. in the hands)' },
+          { id: 8, type: 's', text: 'I felt that I was using a lot of nervous energy' },
+          { id: 9, type: 'a', text: 'I was worried about situations in which I might panic and make a fool of myself' },
+          { id: 10, type: 'd', text: 'I felt that I had nothing to look forward to' },
+          { id: 11, type: 's', text: 'I found myself getting agitated' },
+          { id: 12, type: 's', text: 'I found it difficult to relax' },
+          { id: 13, type: 'd', text: 'I felt down-hearted and blue' },
+          { id: 14, type: 's', text: 'I was intolerant of anything that kept me from getting on with what I was doing' },
+          { id: 15, type: 'a', text: 'I felt I was close to panic' },
+          { id: 16, type: 'd', text: 'I was unable to become enthusiastic about anything' },
+          { id: 17, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
+          { id: 18, type: 's', text: 'I felt that I was rather touchy' },
+          { id: 19, type: 'a', text: 'I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)' },
+          { id: 20, type: 'a', text: 'I felt scared without any good reason' },
+          { id: 21, type: 'd', text: 'I felt that life was meaningless' }
+        ]
+      },
+      phq9: {
+        title: 'PHQ-9',
+        description: 'Patient Health Questionnaire for Depression',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          Over the last 2 weeks, how often have you been bothered by any of the following problems?
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>0</strong> = Not at all</li>
+            <li><strong>1</strong> = Several days</li>
+            <li><strong>2</strong> = More than half the days</li>
+            <li><strong>3</strong> = Nearly every day</li>
+          </ul>
+        `,
+        scale: [
+          { value: '0', label: '0' },
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' }
+        ],
+        questions: [
+          { id: 1, text: 'Little interest or pleasure in doing things' },
+          { id: 2, text: 'Feeling down, depressed, or hopeless' },
+          { id: 3, text: 'Trouble falling or staying asleep, or sleeping too much' },
+          { id: 4, text: 'Feeling tired or having little energy' },
+          { id: 5, text: 'Poor appetite or overeating' },
+          { id: 6, text: 'Feeling bad about yourself — or that you are a failure or have let yourself or your family down' },
+          { id: 7, text: 'Trouble concentrating on things, such as reading the newspaper or watching television' },
+          { id: 8, text: 'Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual' },
+          { id: 9, text: 'Thoughts that you would be better off dead or of hurting yourself in some way' }
+        ]
+      },
+      gad7: {
+        title: 'GAD-7',
+        description: 'Generalized Anxiety Disorder Assessment',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          Over the last 2 weeks, how often have you been bothered by the following problems?
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>0</strong> = Not at all</li>
+            <li><strong>1</strong> = Several days</li>
+            <li><strong>2</strong> = More than half the days</li>
+            <li><strong>3</strong> = Nearly every day</li>
+          </ul>
+        `,
+        scale: [
+          { value: '0', label: '0' },
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' }
+        ],
+        questions: [
+          { id: 1, text: 'Feeling nervous, anxious or on edge' },
+          { id: 2, text: 'Not being able to stop or control worrying' },
+          { id: 3, text: 'Worrying too much about different things' },
+          { id: 4, text: 'Trouble relaxing' },
+          { id: 5, text: 'Being so restless that it is hard to sit still' },
+          { id: 6, text: 'Becoming easily annoyed or irritable' },
+          { id: 7, text: 'Feeling afraid as if something awful might happen' }
+        ]
+      },
+      pss10: {
+        title: 'PSS-10',
+        description: 'Perceived Stress Scale',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          The questions in this scale ask you about your feelings and thoughts during the <strong>last month</strong>. In each case, please indicate how often you felt or thought a certain way.
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>0</strong> = Never</li>
+            <li><strong>1</strong> = Almost never</li>
+            <li><strong>2</strong> = Sometimes</li>
+            <li><strong>3</strong> = Fairly often</li>
+            <li><strong>4</strong> = Very often</li>
+          </ul>
+        `,
+        scale: [
+          { value: '0', label: '0' },
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' },
+          { value: '4', label: '4' }
+        ],
+        questions: [
+          { id: 1, text: 'In the last month, how often have you been upset because of something that happened unexpectedly?' },
+          { id: 2, text: 'In the last month, how often have you felt that you were unable to control the important things in your life?' },
+          { id: 3, text: 'In the last month, how often have you felt nervous and "stressed"?' },
+          { id: 4, text: 'In the last month, how often have you felt confident about your ability to handle your personal problems?', reverse: true },
+          { id: 5, text: 'In the last month, how often have you felt that things were going your way?', reverse: true },
+          { id: 6, text: 'In the last month, how often have you found that you could not cope with all the things that you had to do?' },
+          { id: 7, text: 'In the last month, how often have you been able to control irritations in your life?', reverse: true },
+          { id: 8, text: 'In the last month, how often have you felt that you were on top of things?', reverse: true },
+          { id: 9, text: 'In the last month, how often have you been angered because of things that were outside of your control?' },
+          { id: 10, text: 'In the last month, how often have you felt difficulties were piling up so high that you could not overcome them?' }
+        ]
+      },
+      swls: {
+        title: 'SWLS',
+        description: 'Satisfaction with Life Scale',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          Below are five statements that you may agree or disagree with. Using the 1-7 scale below, indicate your agreement with each item by placing the appropriate number on the line preceding that item.
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>1</strong> = Strongly disagree</li>
+            <li><strong>2</strong> = Disagree</li>
+            <li><strong>3</strong> = Slightly disagree</li>
+            <li><strong>4</strong> = Neither agree nor disagree</li>
+            <li><strong>5</strong> = Slightly agree</li>
+            <li><strong>6</strong> = Agree</li>
+            <li><strong>7</strong> = Strongly agree</li>
+          </ul>
+        `,
+        scale: [
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' },
+          { value: '4', label: '4' },
+          { value: '5', label: '5' },
+          { value: '6', label: '6' },
+          { value: '7', label: '7' }
+        ],
+        questions: [
+          { id: 1, text: 'In most ways my life is close to my ideal' },
+          { id: 2, text: 'The conditions of my life are excellent' },
+          { id: 3, text: 'I am satisfied with my life' },
+          { id: 4, text: 'So far I have gotten the important things I want in life' },
+          { id: 5, text: 'If I could live my life over, I would change almost nothing' }
+        ]
+      },
+      rses: {
+        title: 'RSES',
+        description: 'Rosenberg Self-Esteem Scale',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          Below is a list of statements dealing with your general feelings about yourself. Please indicate how strongly you agree or disagree with each statement.
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>1</strong> = Strongly agree</li>
+            <li><strong>2</strong> = Agree</li>
+            <li><strong>3</strong> = Disagree</li>
+            <li><strong>4</strong> = Strongly disagree</li>
+          </ul>
+        `,
+        scale: [
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' },
+          { value: '4', label: '4' }
+        ],
+        questions: [
+          { id: 1, text: 'On the whole, I am satisfied with myself' },
+          { id: 2, text: 'At times I think I am no good at all', reverse: true },
+          { id: 3, text: 'I feel that I have a number of good qualities' },
+          { id: 4, text: 'I am able to do things as well as most other people' },
+          { id: 5, text: 'I feel I do not have much to be proud of', reverse: true },
+          { id: 6, text: 'I certainly feel useless at times', reverse: true },
+          { id: 7, text: 'I feel that I\'m a person of worth, at least on an equal plane with others' },
+          { id: 8, text: 'I wish I could have more respect for myself', reverse: true },
+          { id: 9, text: 'All in all, I am inclined to feel that I am a failure', reverse: true },
+          { id: 10, text: 'I take a positive attitude toward myself' }
+        ]
+      },
+      dass42: {
+        title: 'DASS-42',
+        description: 'Full Depression, Anxiety, and Stress Self-Assessment Tool',
+        instructions: `
+          <strong>Instructions:</strong><br />
+          Please rate how much each statement applied to you during the <strong>past week</strong>, including today, using the scale below:
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>0</strong> = Did not apply to me at all</li>
+            <li><strong>1</strong> = Applied to me to some degree, or some of the time</li>
+            <li><strong>2</strong> = Applied to me to a considerable degree or a good part of the time</li>
+            <li><strong>3</strong> = Applied to me very much or most of the time</li>
+          </ul>
+          <br />
+          Please answer all questions honestly and based on your experience over the last 7 days.
+        `,
+        scale: [
+          { value: '0', label: '0' },
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' }
+        ],
+        questions: [
+          { id: 1, type: 's', text: 'I found it hard to wind down' },
+          { id: 2, type: 'a', text: 'I was aware of dryness of my mouth' },
+          { id: 3, type: 'd', text: 'I couldn\'t seem to experience any positive feeling at all' },
+          { id: 4, type: 'a', text: 'I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion)' },
+          { id: 5, type: 'd', text: 'I found it difficult to work up the initiative to do things' },
+          { id: 6, type: 's', text: 'I tended to over-react to situations' },
+          { id: 7, type: 'a', text: 'I experienced trembling (e.g. in the hands)' },
+          { id: 8, type: 's', text: 'I felt that I was using a lot of nervous energy' },
+          { id: 9, type: 'a', text: 'I was worried about situations in which I might panic and make a fool of myself' },
+          { id: 10, type: 'd', text: 'I felt that I had nothing to look forward to' },
+          { id: 11, type: 's', text: 'I found myself getting agitated' },
+          { id: 12, type: 's', text: 'I found it difficult to relax' },
+          { id: 13, type: 'd', text: 'I felt down-hearted and blue' },
+          { id: 14, type: 's', text: 'I was intolerant of anything that kept me from getting on with what I was doing' },
+          { id: 15, type: 'a', text: 'I felt I was close to panic' },
+          { id: 16, type: 'd', text: 'I was unable to become enthusiastic about anything' },
+          { id: 17, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
+          { id: 18, type: 's', text: 'I felt that I was rather touchy' },
+          { id: 19, type: 'a', text: 'I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)' },
+          { id: 20, type: 'a', text: 'I felt scared without any good reason' },
+          { id: 21, type: 'd', text: 'I felt that life was meaningless' },
+          { id: 22, type: 's', text: 'I found myself getting upset by quite trivial things' },
+          { id: 23, type: 'a', text: 'I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)' },
+          { id: 24, type: 'd', text: 'I felt that life wasn\'t worthwhile' },
+          { id: 25, type: 'a', text: 'I found it difficult to tolerate interruptions to what I was doing' },
+          { id: 26, type: 's', text: 'I felt I was close to panic' },
+          { id: 27, type: 'd', text: 'I was unable to become enthusiastic about anything' },
+          { id: 28, type: 's', text: 'I found it difficult to tolerate interruptions to what I was doing' },
+          { id: 29, type: 'a', text: 'I experienced trembling (e.g. in the hands)' },
+          { id: 30, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
+          { id: 31, type: 's', text: 'I found it hard to calm down after something upset me' },
+          { id: 32, type: 'a', text: 'I feared that I would be "thrown" by some trivial but unfamiliar task' },
+          { id: 33, type: 'd', text: 'I felt sad and depressed' },
+          { id: 34, type: 's', text: 'I found myself getting impatient when I was delayed in any way (e.g. lifts, traffic lights, being kept waiting)' },
+          { id: 35, type: 'd', text: 'I had a feeling of faintness' },
+          { id: 36, type: 'a', text: 'I felt terrified' },
+          { id: 37, type: 'd', text: 'I could see nothing in the future to be hopeful about' },
+          { id: 38, type: 's', text: 'I felt that life was meaningless' },
+          { id: 39, type: 'a', text: 'I found myself getting upset rather easily' },
+          { id: 40, type: 's', text: 'I was worried about situations in which I might panic and make a fool of myself' },
+          { id: 41, type: 'a', text: 'I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion)' },
+          { id: 42, type: 'd', text: 'I felt I had lost interest in just about everything' }
+        ]
+      },
+      dassy: {
+        title: 'DASS-Y',
+        description: 'Youth Depression, Anxiety, and Stress Self-Assessment Tool',
+        instructions: `
+          <strong>Instructions for Young People:</strong><br />
+          Please read each statement and circle a number 0, 1, 2 or 3 which indicates how much the statement applied to you <strong>over the past week</strong>. There are no right or wrong answers. Do not spend too much time on any statement.
+          <br /><br />
+          <ul style="margin-left: 20px; line-height: 1.6;">
+            <li><strong>0</strong> = Did not apply to me at all</li>
+            <li><strong>1</strong> = Applied to me to some degree, or some of the time</li>
+            <li><strong>2</strong> = Applied to me to a considerable degree or a good part of the time</li>
+            <li><strong>3</strong> = Applied to me very much or most of the time</li>
+          </ul>
+          <br />
+          <strong>Note:</strong> This assessment is designed for young people aged 12-17 years.
+        `,
+        scale: [
+          { value: '0', label: '0' },
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' }
+        ],
+        questions: [
+          { id: 1, type: 's', text: 'I found it hard to wind down' },
+          { id: 2, type: 'a', text: 'I was aware of dryness of my mouth' },
+          { id: 3, type: 'd', text: 'I couldn\'t seem to experience any positive feeling at all' },
+          { id: 4, type: 'a', text: 'I had breathing problems (e.g. breathing really fast, short of breath when I hadn\'t been exercising)' },
+          { id: 5, type: 'd', text: 'I found it difficult to get motivated to do things' },
+          { id: 6, type: 's', text: 'I tended to over-react to situations' },
+          { id: 7, type: 'a', text: 'I had shaky hands' },
+          { id: 8, type: 's', text: 'I felt that I was using a lot of nervous energy' },
+          { id: 9, type: 'a', text: 'I was worried about situations where I might panic and make a fool of myself' },
+          { id: 10, type: 'd', text: 'I felt that I had nothing to look forward to' },
+          { id: 11, type: 's', text: 'I found myself getting agitated' },
+          { id: 12, type: 's', text: 'I found it difficult to relax' },
+          { id: 13, type: 'd', text: 'I felt down-hearted and blue' },
+          { id: 14, type: 's', text: 'I was intolerant of anything that kept me from getting on with what I was doing' },
+          { id: 15, type: 'a', text: 'I felt I was close to panic' },
+          { id: 16, type: 'd', text: 'I was unable to become enthusiastic about anything' },
+          { id: 17, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
+          { id: 18, type: 's', text: 'I felt that I was rather touchy' },
+          { id: 19, type: 'a', text: 'I was aware of the action of my heart even though I hadn\'t been exercising (e.g. heart going faster, heart missing a beat)' },
+          { id: 20, type: 'a', text: 'I felt scared without any good reason' },
+          { id: 21, type: 'd', text: 'I felt that life was meaningless' },
+          { id: 22, type: 's', text: 'I found myself getting upset by quite trivial things' },
+          { id: 23, type: 'a', text: 'I was aware of the action of my heart even though I hadn\'t been exercising (e.g. heart going faster, heart missing a beat)' },
+          { id: 24, type: 'd', text: 'I felt that life wasn\'t worthwhile' },
+          { id: 25, type: 's', text: 'I found it difficult to tolerate interruptions to what I was doing' },
+          { id: 26, type: 'a', text: 'I felt I was close to panic' },
+          { id: 27, type: 'd', text: 'I was unable to become enthusiastic about anything' },
+          { id: 28, type: 's', text: 'I found it difficult to tolerate interruptions to what I was doing' },
+          { id: 29, type: 'a', text: 'I had shaky hands' },
+          { id: 30, type: 'd', text: 'I felt I wasn\'t worth much as a person' },
+          { id: 31, type: 's', text: 'I found it hard to calm down after something upset me' },
+          { id: 32, type: 'a', text: 'I feared that I would be "thrown" by some trivial but unfamiliar task' },
+          { id: 33, type: 'd', text: 'I felt sad and depressed' },
+          { id: 34, type: 's', text: 'I found myself getting impatient when I was delayed in any way (e.g. elevators, traffic lights, being kept waiting)' },
+          { id: 35, type: 'd', text: 'I had a feeling of faintness' },
+          { id: 36, type: 'a', text: 'I felt terrified' },
+          { id: 37, type: 'd', text: 'I could see nothing in the future to be hopeful about' },
+          { id: 38, type: 's', text: 'I felt that life was meaningless' },
+          { id: 39, type: 'a', text: 'I found myself getting upset rather easily' },
+          { id: 40, type: 's', text: 'I was worried about situations where I might panic and make a fool of myself' },
+          { id: 41, type: 'a', text: 'I had breathing problems (e.g. breathing really fast, short of breath when I hadn\'t been exercising)' },
+          { id: 42, type: 'd', text: 'I felt I had lost interest in just about everything' }
+        ]
+      }
+    };
 
-    const container = document.getElementById('questionContainer');
-    questions.forEach(q => {
-      const div = document.createElement('div');
-      div.className = 'question';
-      div.innerHTML = `
-        <h3>${q.id}. ${q.text}</h3>
-        <div class="options">
-          ${scale.map(s => `
-            <div class="option">
-              <input type="radio" id="q${q.id}_${s.value}" name="q${q.id}" value="${s.value}" required />
-              <label for="q${q.id}_${s.value}">${s.value}</label>
-            </div>
-          `).join('')}
-        </div>
-      `;
-      container.appendChild(div);
-    });
-
-    const form = document.getElementById('dassForm');
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+    function startTest(testId) {
+      currentTest = testId;
+      testData = tests[testId];
       
+      document.getElementById('testSelection').style.display = 'none';
+      document.getElementById('testContainer').style.display = 'grid';
+      
+      document.getElementById('testTitle').textContent = testData.title;
+      document.getElementById('testDescription').textContent = testData.description;
+      document.getElementById('testInstructions').innerHTML = testData.instructions;
+      
+      renderQuestions();
+      
+      // Set today's date
+      document.getElementById('date').valueAsDate = new Date();
+    }
+
+    function backToSelection() {
+      document.getElementById('testSelection').style.display = 'block';
+      document.getElementById('testContainer').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+      
+      // Reset form
+      document.getElementById('assessmentForm').reset();
+      currentTest = null;
+      testData = {};
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questionContainer');
+      container.innerHTML = '';
+      
+      testData.questions.forEach(q => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `
+          <h3>${q.id}. ${q.text}</h3>
+          <div class="options">
+            ${testData.scale.map(s => `
+              <div class="option">
+                <input type="radio" id="q${q.id}_${s.value}" name="q${q.id}" value="${s.value}" required />
+                <label for="q${q.id}_${s.value}">${s.value}</label>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function calculateResults() {
+      if (currentTest === 'dass21' || currentTest === 'dass42' || currentTest === 'dassy') {
+        return calculateDASS21();
+      } else if (currentTest === 'phq9') {
+        return calculatePHQ9();
+      } else if (currentTest === 'gad7') {
+        return calculateGAD7();
+      } else if (currentTest === 'pss10') {
+        return calculatePSS10();
+      } else if (currentTest === 'swls') {
+        return calculateSWLS();
+      } else if (currentTest === 'rses') {
+        return calculateRSES();
+      }
+    }
+
+    function calculateDASS21() {
       let depression = 0, anxiety = 0, stress = 0;
       
-      questions.forEach(q => {
+      testData.questions.forEach(q => {
         const val = parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
         if (q.type === 'd') depression += val;
         else if (q.type === 'a') anxiety += val;
         else if (q.type === 's') stress += val;
       });
 
-      // Multiply by 2 as per DASS-21 scoring
       depression *= 2;
       anxiety *= 2;
       stress *= 2;
-
-      document.getElementById('depressionScore').textContent = depression;
-      document.getElementById('anxietyScore').textContent = anxiety;
-      document.getElementById('stressScore').textContent = stress;
 
       const getLevelAndClass = (score, type) => {
         const ranges = {
@@ -538,22 +1149,122 @@
       const [al, ac] = getLevelAndClass(anxiety, 'a');
       const [sl, sc] = getLevelAndClass(stress, 's');
 
-      const setLevel = (id, text, className) => {
-        const element = document.getElementById(id);
-        element.textContent = text;
-        element.className = `score-level ${className}`;
-      };
+      return [
+        { name: 'Depression', score: depression, level: dl, class: dc },
+        { name: 'Anxiety', score: anxiety, level: al, class: ac },
+        { name: 'Stress', score: stress, level: sl, class: sc }
+      ];
+    }
 
-      setLevel('depressionLevel', dl, dc);
-      setLevel('anxietyLevel', al, ac);
-      setLevel('stressLevel', sl, sc);
+    function calculatePHQ9() {
+      let total = 0;
+      testData.questions.forEach(q => {
+        total += parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
+      });
+
+      let level, className;
+      if (total <= 4) { level = 'Minimal'; className = 'normal'; }
+      else if (total <= 9) { level = 'Mild'; className = 'mild'; }
+      else if (total <= 14) { level = 'Moderate'; className = 'moderate'; }
+      else if (total <= 19) { level = 'Moderately Severe'; className = 'severe'; }
+      else { level = 'Severe'; className = 'extremely-severe'; }
+
+      return [{ name: 'Depression', score: total, level: level, class: className }];
+    }
+
+    function calculateGAD7() {
+      let total = 0;
+      testData.questions.forEach(q => {
+        total += parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
+      });
+
+      let level, className;
+      if (total <= 4) { level = 'Minimal'; className = 'normal'; }
+      else if (total <= 9) { level = 'Mild'; className = 'mild'; }
+      else if (total <= 14) { level = 'Moderate'; className = 'moderate'; }
+      else { level = 'Severe'; className = 'severe'; }
+
+      return [{ name: 'Anxiety', score: total, level: level, class: className }];
+    }
+
+    function calculatePSS10() {
+      let total = 0;
+      testData.questions.forEach(q => {
+        let val = parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
+        if (q.reverse) {
+          val = 4 - val;
+        }
+        total += val;
+      });
+
+      let level, className;
+      if (total <= 13) { level = 'Low Stress'; className = 'normal'; }
+      else if (total <= 26) { level = 'Moderate Stress'; className = 'moderate'; }
+      else { level = 'High Stress'; className = 'severe'; }
+
+      return [{ name: 'Perceived Stress', score: total, level: level, class: className }];
+    }
+
+    function calculateSWLS() {
+      let total = 0;
+      testData.questions.forEach(q => {
+        total += parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
+      });
+
+      let level, className;
+      if (total <= 9) { level = 'Extremely Dissatisfied'; className = 'extremely-severe'; }
+      else if (total <= 14) { level = 'Dissatisfied'; className = 'severe'; }
+      else if (total <= 19) { level = 'Slightly Dissatisfied'; className = 'moderate'; }
+      else if (total <= 24) { level = 'Neutral'; className = 'mild'; }
+      else if (total <= 29) { level = 'Satisfied'; className = 'normal'; }
+      else { level = 'Extremely Satisfied'; className = 'normal'; }
+
+      return [{ name: 'Life Satisfaction', score: total, level: level, class: className }];
+    }
+
+    function calculateRSES() {
+      let total = 0;
+      testData.questions.forEach(q => {
+        let val = parseInt(document.querySelector(`input[name="q${q.id}"]:checked`).value);
+        if (q.reverse) {
+          val = 5 - val;
+        }
+        total += val;
+      });
+
+      let level, className;
+      if (total < 15) { level = 'Low Self-Esteem'; className = 'severe'; }
+      else if (total <= 25) { level = 'Normal Self-Esteem'; className = 'normal'; }
+      else { level = 'High Self-Esteem'; className = 'normal'; }
+
+      return [{ name: 'Self-Esteem', score: total, level: level, class: className }];
+    }
+
+    function displayResults(results) {
+      const resultBox = document.getElementById('resultBox');
+      resultBox.innerHTML = '';
+
+      results.forEach(result => {
+        const card = document.createElement('div');
+        card.className = 'score-card';
+        card.innerHTML = `
+          <h4>${result.name}</h4>
+          <div class="score-value">${result.score}</div>
+          <div class="score-level ${result.class}">${result.level}</div>
+        `;
+        resultBox.appendChild(card);
+      });
 
       document.getElementById('results').style.display = 'block';
       document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-    });
+    }
 
-    // Set today's date
-    document.getElementById('date').valueAsDate = new Date();
+    // Form submission
+    document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const results = calculateResults();
+      displayResults(results);
+    });
 
     // PDF Generation
     document.getElementById('downloadPDF').addEventListener('click', function() {
@@ -565,20 +1276,13 @@
       const [yyyy, mm, dd] = rawDate.split('-');
       const date = `${dd}/${mm}/${yyyy}`;
 
-      const depression = parseInt(document.getElementById('depressionScore').textContent);
-      const anxiety = parseInt(document.getElementById('anxietyScore').textContent);
-      const stress = parseInt(document.getElementById('stressScore').textContent);
-      
-      const depressionLevel = document.getElementById('depressionLevel').textContent;
-      const anxietyLevel = document.getElementById('anxietyLevel').textContent;
-      const stressLevel = document.getElementById('stressLevel').textContent;
+      const results = calculateResults();
 
       // PDF styling
       let yPosition = 20;
       const pageHeight = doc.internal.pageSize.height;
       const margin = 20;
       
-      // Helper function to add new page if needed
       function checkPageBreak(additionalHeight = 10) {
         if (yPosition + additionalHeight > pageHeight - margin) {
           doc.addPage();
@@ -589,13 +1293,13 @@
       // Header
       doc.setFontSize(24);
       doc.setFont('helvetica', 'bold');
-      doc.text('DASS-21 Assessment Report', 105, yPosition, { align: 'center' });
+      doc.text(`${testData.title} Assessment Report`, 105, yPosition, { align: 'center' });
       yPosition += 15;
       
       // Subtitle
       doc.setFontSize(12);
       doc.setFont('helvetica', 'normal');
-      doc.text('Depression, Anxiety and Stress Scale - 21 Items', 105, yPosition, { align: 'center' });
+      doc.text(testData.description, 105, yPosition, { align: 'center' });
       yPosition += 20;
       
       // Name and Date
@@ -604,25 +1308,6 @@
       doc.text(`Name: ${name}`, 20, yPosition);
       doc.text(`Date: ${date}`, 150, yPosition);
       yPosition += 20;
-      
-      // Instructions
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Instructions:', 20, yPosition);
-      yPosition += 8;
-      
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Please rate how much each statement applied to you during the past week:', 20, yPosition);
-      yPosition += 6;
-      doc.text('0 = Did not apply to me at all', 25, yPosition);
-      yPosition += 5;
-      doc.text('1 = Applied to me to some degree, or some of the time', 25, yPosition);
-      yPosition += 5;
-      doc.text('2 = Applied to me to a considerable degree or a good part of time', 25, yPosition);
-      yPosition += 5;
-      doc.text('3 = Applied to me very much or most of the time', 25, yPosition);
-      yPosition += 15;
       
       // Results Summary
       checkPageBreak(40);
@@ -639,24 +1324,17 @@
       doc.text('Level', 130, yPosition);
       yPosition += 8;
       
-      // Draw line under headers
       doc.line(20, yPosition, 180, yPosition);
       yPosition += 8;
       
       doc.setFont('helvetica', 'normal');
-      doc.text('Depression', 20, yPosition);
-      doc.text(depression.toString(), 80, yPosition);
-      doc.text(depressionLevel, 130, yPosition);
-      yPosition += 8;
+      results.forEach(result => {
+        doc.text(result.name, 20, yPosition);
+        doc.text(result.score.toString(), 80, yPosition);
+        doc.text(result.level, 130, yPosition);
+        yPosition += 8;
+      });
       
-      doc.text('Anxiety', 20, yPosition);
-      doc.text(anxiety.toString(), 80, yPosition);
-      doc.text(anxietyLevel, 130, yPosition);
-      yPosition += 8;
-      
-      doc.text('Stress', 20, yPosition);
-      doc.text(stress.toString(), 80, yPosition);
-      doc.text(stressLevel, 130, yPosition);
       yPosition += 20;
       
       // Individual Responses
@@ -666,118 +1344,26 @@
       doc.text('Individual Question Responses', 20, yPosition);
       yPosition += 15;
       
-      questions.forEach(q => {
+      testData.questions.forEach(q => {
         checkPageBreak(15);
       
         const selectedValue = document.querySelector(`input[name="q${q.id}"]:checked`).value;
-        const scaleText = {
-          '0': 'Did not apply to me at all',
-          '1': 'Applied to me to some degree, or some of the time', 
-          '2': 'Applied to me to a considerable degree or a good part of time',
-          '3': 'Applied to me very much or most of the time'
-        }[selectedValue];
-      
+        
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
       
-        // 👉 Wrap long question text
         const questionText = `${q.id}. ${q.text}`;
         const questionLines = doc.splitTextToSize(questionText, 170);
         doc.text(questionLines, 20, yPosition);
         yPosition += questionLines.length * 5;
       
-        // 👉 Wrap long response text
         doc.setFont('helvetica', 'normal');
-        const responseText = `Response: ${selectedValue} - ${scaleText}`;
+        const responseText = `Response: ${selectedValue}`;
         const responseLines = doc.splitTextToSize(responseText, 165);
         doc.text(responseLines, 25, yPosition);
         yPosition += responseLines.length * 5 + 5;
       });
 
-      
-      // Add new page for interpretation
-      doc.addPage();
-      yPosition = 20;
-      
-      // Interpretation
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Interpretation Guide', 20, yPosition);
-      yPosition += 15;
-      
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Depression Scale:', 20, yPosition);
-      yPosition += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.text('Assesses dysphoria, hopelessness, devaluation of life, self-deprecation,', 20, yPosition);
-      yPosition += 5;
-      doc.text('lack of interest/involvement, anhedonia and inertia.', 20, yPosition);
-      yPosition += 12;
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text('Anxiety Scale:', 20, yPosition);
-      yPosition += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.text('Assesses autonomic arousal, skeletal muscle effects, situational anxiety,', 20, yPosition);
-      yPosition += 5;
-      doc.text('and subjective experience of anxious affect.', 20, yPosition);
-      yPosition += 12;
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text('Stress Scale:', 20, yPosition);
-      yPosition += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.text('Assesses difficulty relaxing, nervous arousal, and being easily', 20, yPosition);
-      yPosition += 5;
-      doc.text('upset/agitated, irritable/over-reactive and impatient.', 20, yPosition);
-      yPosition += 15;
-      
-      // Severity Ranges
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Severity Ranges', 20, yPosition);
-      yPosition += 12;
-      
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Depression:', 20, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Normal (0-9), Mild (10-13), Moderate (14-20), Severe (21-27), Extremely Severe (28+)', 20, yPosition + 5);
-      yPosition += 15;
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text('Anxiety:', 20, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Normal (0-7), Mild (8-9), Moderate (10-14), Severe (15-19), Extremely Severe (20+)', 20, yPosition + 5);
-      yPosition += 15;
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text('Stress:', 20, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Normal (0-14), Mild (15-18), Moderate (19-25), Severe (26-33), Extremely Severe (34+)', 20, yPosition + 5);
-      yPosition += 20;
-      
-      // Important Note
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Important Note:', 20, yPosition);
-      yPosition += 8;
-      doc.setFont('helvetica', 'normal');
-      doc.text('The DASS-21 should not be used to replace a face-to-face clinical interview.', 20, yPosition);
-      yPosition += 5;
-      doc.text('If you are experiencing significant emotional difficulties, you should contact', 20, yPosition);
-      yPosition += 5;
-      doc.text('your GP for a referral to a qualified professional.', 20, yPosition);
-      yPosition += 15;
-      
-      // Reference
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'italic');
-      doc.text('Reference: Lovibond, S.H. & Lovibond, P.F. (1995). Manual for the Depression', 20, yPosition);
-      yPosition += 5;
-      doc.text('Anxiety & Stress Scales. (2nd Ed.) Sydney: Psychology Foundation.', 20, yPosition);
-      
       // Footer
       const pageCount = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
@@ -788,8 +1374,7 @@
         doc.text(`Generated on ${new Date().toLocaleDateString()}`, 190, pageHeight - 10, { align: 'right' });
       }
       
-      // Save the PDF
-      doc.save(`DASS-21_Report_${name.replace(/[^a-zA-Z0-9]/g, '_')}_${date}.pdf`);
+      doc.save(`${testData.title}_Report_${name.replace(/[^a-zA-Z0-9]/g, '_')}_${date}.pdf`);
     });
   </script>
 </body>
