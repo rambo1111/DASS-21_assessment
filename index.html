@@ -324,20 +324,28 @@
       border: 1px solid #e9d5ff;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        padding: 16px;
-      }
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: 16px;
+  }
 
-      .sidebar {
-        padding: 20px;
-      }
+  .sidebar {
+    width: 100%;
+    padding: 20px;
+    position: static;
+    box-shadow: none;
+  }
 
-      .main {
-        padding: 24px;
-      }
+  .main {
+    width: 100%;
+    padding: 24px;
+    overflow-y: visible;
+  }
+}
+
 
       .options {
         justify-content: center;
