@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DASS-21 Assessment</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -416,6 +417,11 @@
             <div class="score-level" id="stressLevel">Normal</div>
           </div>
         </div>
+        <div style="text-align: center; margin-top: 24px;">
+          <button id="downloadPDF" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 12px 32px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);">
+            📄 Download PDF Report
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -526,6 +532,233 @@
 
     // Set today's date
     document.getElementById('date').valueAsDate = new Date();
+
+    // PDF Generation
+    document.getElementById('downloadPDF').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      const name = document.getElementById('name').value || 'Anonymous';
+      const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+      
+      const depression = parseInt(document.getElementById('depressionScore').textContent);
+      const anxiety = parseInt(document.getElementById('anxietyScore').textContent);
+      const stress = parseInt(document.getElementById('stressScore').textContent);
+      
+      const depressionLevel = document.getElementById('depressionLevel').textContent;
+      const anxietyLevel = document.getElementById('anxietyLevel').textContent;
+      const stressLevel = document.getElementById('stressLevel').textContent;
+
+      // PDF styling
+      let yPosition = 20;
+      const pageHeight = doc.internal.pageSize.height;
+      const margin = 20;
+      
+      // Helper function to add new page if needed
+      function checkPageBreak(additionalHeight = 10) {
+        if (yPosition + additionalHeight > pageHeight - margin) {
+          doc.addPage();
+          yPosition = 20;
+        }
+      }
+      
+      // Header
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DASS-21 Assessment Report', 105, yPosition, { align: 'center' });
+      yPosition += 15;
+      
+      // Subtitle
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Depression, Anxiety and Stress Scale - 21 Items', 105, yPosition, { align: 'center' });
+      yPosition += 20;
+      
+      // Name and Date
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Name: ${name}`, 20, yPosition);
+      doc.text(`Date: ${date}`, 150, yPosition);
+      yPosition += 20;
+      
+      // Instructions
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Instructions:', 20, yPosition);
+      yPosition += 8;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Please rate how much each statement applied to you during the past week:', 20, yPosition);
+      yPosition += 6;
+      doc.text('0 = Did not apply to me at all', 25, yPosition);
+      yPosition += 5;
+      doc.text('1 = Applied to me to some degree, or some of the time', 25, yPosition);
+      yPosition += 5;
+      doc.text('2 = Applied to me to a considerable degree or a good part of time', 25, yPosition);
+      yPosition += 5;
+      doc.text('3 = Applied to me very much or most of the time', 25, yPosition);
+      yPosition += 15;
+      
+      // Results Summary
+      checkPageBreak(40);
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Assessment Results', 20, yPosition);
+      yPosition += 15;
+      
+      // Results table
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Scale', 20, yPosition);
+      doc.text('Score', 80, yPosition);
+      doc.text('Level', 130, yPosition);
+      yPosition += 8;
+      
+      // Draw line under headers
+      doc.line(20, yPosition, 180, yPosition);
+      yPosition += 8;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.text('Depression', 20, yPosition);
+      doc.text(depression.toString(), 80, yPosition);
+      doc.text(depressionLevel, 130, yPosition);
+      yPosition += 8;
+      
+      doc.text('Anxiety', 20, yPosition);
+      doc.text(anxiety.toString(), 80, yPosition);
+      doc.text(anxietyLevel, 130, yPosition);
+      yPosition += 8;
+      
+      doc.text('Stress', 20, yPosition);
+      doc.text(stress.toString(), 80, yPosition);
+      doc.text(stressLevel, 130, yPosition);
+      yPosition += 20;
+      
+      // Individual Responses
+      checkPageBreak(30);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Individual Question Responses', 20, yPosition);
+      yPosition += 15;
+      
+      questions.forEach(q => {
+        checkPageBreak(15);
+        
+        const selectedValue = document.querySelector(`input[name="q${q.id}"]:checked`).value;
+        const scaleText = {
+          '0': 'Did not apply to me at all',
+          '1': 'Applied to me to some degree, or some of the time', 
+          '2': 'Applied to me to a considerable degree or a good part of time',
+          '3': 'Applied to me very much or most of the time'
+        }[selectedValue];
+        
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${q.id}. ${q.text}`, 20, yPosition);
+        yPosition += 6;
+        
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Response: ${selectedValue} - ${scaleText}`, 25, yPosition);
+        yPosition += 10;
+      });
+      
+      // Add new page for interpretation
+      doc.addPage();
+      yPosition = 20;
+      
+      // Interpretation
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Interpretation Guide', 20, yPosition);
+      yPosition += 15;
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Depression Scale:', 20, yPosition);
+      yPosition += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.text('Assesses dysphoria, hopelessness, devaluation of life, self-deprecation,', 20, yPosition);
+      yPosition += 5;
+      doc.text('lack of interest/involvement, anhedonia and inertia.', 20, yPosition);
+      yPosition += 12;
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Anxiety Scale:', 20, yPosition);
+      yPosition += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.text('Assesses autonomic arousal, skeletal muscle effects, situational anxiety,', 20, yPosition);
+      yPosition += 5;
+      doc.text('and subjective experience of anxious affect.', 20, yPosition);
+      yPosition += 12;
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Stress Scale:', 20, yPosition);
+      yPosition += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.text('Assesses difficulty relaxing, nervous arousal, and being easily', 20, yPosition);
+      yPosition += 5;
+      doc.text('upset/agitated, irritable/over-reactive and impatient.', 20, yPosition);
+      yPosition += 15;
+      
+      // Severity Ranges
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Severity Ranges', 20, yPosition);
+      yPosition += 12;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Depression:', 20, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Normal (0-9), Mild (10-13), Moderate (14-20), Severe (21-27), Extremely Severe (28+)', 20, yPosition + 5);
+      yPosition += 15;
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Anxiety:', 20, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Normal (0-7), Mild (8-9), Moderate (10-14), Severe (15-19), Extremely Severe (20+)', 20, yPosition + 5);
+      yPosition += 15;
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('Stress:', 20, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Normal (0-14), Mild (15-18), Moderate (19-25), Severe (26-33), Extremely Severe (34+)', 20, yPosition + 5);
+      yPosition += 20;
+      
+      // Important Note
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Important Note:', 20, yPosition);
+      yPosition += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.text('The DASS-21 should not be used to replace a face-to-face clinical interview.', 20, yPosition);
+      yPosition += 5;
+      doc.text('If you are experiencing significant emotional difficulties, you should contact', 20, yPosition);
+      yPosition += 5;
+      doc.text('your GP for a referral to a qualified professional.', 20, yPosition);
+      yPosition += 15;
+      
+      // Reference
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'italic');
+      doc.text('Reference: Lovibond, S.H. & Lovibond, P.F. (1995). Manual for the Depression', 20, yPosition);
+      yPosition += 5;
+      doc.text('Anxiety & Stress Scales. (2nd Ed.) Sydney: Psychology Foundation.', 20, yPosition);
+      
+      // Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Page ${i} of ${pageCount}`, 105, pageHeight - 10, { align: 'center' });
+        doc.text(`Generated on ${new Date().toLocaleDateString()}`, 190, pageHeight - 10, { align: 'right' });
+      }
+      
+      // Save the PDF
+      doc.save(`DASS-21_Report_${name.replace(/[^a-zA-Z0-9]/g, '_')}_${date}.pdf`);
+    });
   </script>
 </body>
 </html>
